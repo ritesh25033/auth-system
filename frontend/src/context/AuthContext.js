@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = 'https://auth-system-zuka.onrender.com/api';
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const config = {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       };
       const response = await axios.get(`${API_URL}/auth/user`, config);
       setCurrentUser(response.data);
@@ -51,7 +51,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password,
+      });
       localStorage.setItem('token', response.data.token);
       setCurrentUser(response.data.user);
       setIsAuthenticated(true);
@@ -73,12 +76,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     register,
     login,
-    logout
+    logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
